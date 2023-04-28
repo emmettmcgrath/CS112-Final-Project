@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 public class Main extends JPanel implements MouseListener{
+    boolean selectedRedPiece = false;
+    boolean selectedWhitePiece = false;
     int clickCount = 0;
     int WIDTH = 600;
     int HEIGHT = 600;
@@ -32,9 +34,9 @@ public class Main extends JPanel implements MouseListener{
         for (int i = 0; i<8; i++){
             for (int j = 0; j<8; j++){
                 if ((i+j)%2==0){
-                    board[i][j]=0;
+                    board[i][j]=0;//white square (out of field of play)
                 }
-                else board[i][j]=1;
+                else board[i][j]=1;//black square
             }
         }
     }
@@ -95,14 +97,13 @@ public class Main extends JPanel implements MouseListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         clickCount++;
-        boolean selectedRedPiece = false;
-        boolean selectedWhitePiece = false;
         int x = e.getX();
         int y = e.getY();
         int cellWidth = WIDTH/8;
         int cellHeight = HEIGHT/8;
         int dx = y/cellWidth;
         int dy = x/cellHeight;
+        System.out.println(dx +" " + dy);
         if (board[dx][dy]==2){
             System.out.println(dx + " " + dy + " red piece");
             selectedRedPiece = true;
@@ -119,20 +120,26 @@ public class Main extends JPanel implements MouseListener{
             //System.out.println(clickCount);
         }
         if ((clickCount%2!=0)&&board[dx][dy]==2){
+            System.out.println("Selected red");
             selectedRedPiece=true;
+            selectedWhitePiece=false;
             board[dx][dy] = 1;
             System.out.println("odd click");
         }
-        if ((clickCount%2==0)&& board[dx][dy]==1){
+        else if ((clickCount%2==0)&& board[dx][dy]==1 && selectedRedPiece){
             board[dx][dy] = 2;
+            System.out.println("selected red: " + selectedRedPiece);
         }
-        if ((clickCount%2!=0)&&board[dx][dy]==3){
+        else if ((clickCount%2!=0)&&board[dx][dy]==3){
+            System.out.println("Selected white");
             selectedWhitePiece=true;
+            selectedRedPiece = false;
             board[dx][dy] = 1;
             System.out.println("odd click");
         }
-        if ((clickCount%2==0)&& board[dx][dy]==1 ){
+        else if ((clickCount%2==0)&& board[dx][dy]==1 && selectedWhitePiece){
             board[dx][dy] = 3;
+            System.out.println("selected white: " + selectedWhitePiece);
         }
     }
 
@@ -167,5 +174,4 @@ public class Main extends JPanel implements MouseListener{
         }
     }
 }
-
 
